@@ -1,0 +1,272 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: server-config
+  namespace: minecraft
+data:
+  paper-global.yml: |
+    # This is the global configuration file for Paper.
+    # As you can see, there's a lot to configure. Some options may impact gameplay, so use
+    # with caution, and make sure you know what each option does before configuring.
+    # 
+    # If you need help with the configuration or have any questions related to Paper,
+    # join us in our Discord or check the docs page.
+    # 
+    # The world configuration options have been moved inside
+    # their respective world folder. The files are named paper-world.yml
+    # 
+    # Docs: https://docs.papermc.io/
+    # Discord: https://discord.gg/papermc
+    # Website: https://papermc.io/
+
+    _version: 28
+    chunk-loading:
+      autoconfig-send-distance: true
+      enable-frustum-priority: false
+      global-max-chunk-load-rate: -1.0
+      global-max-chunk-send-rate: -1.0
+      global-max-concurrent-loads: 500.0
+      max-concurrent-sends: 2
+      min-load-radius: 2
+      player-max-chunk-load-rate: -1.0
+      player-max-concurrent-loads: 20.0
+      target-player-chunk-send-rate: 100.0
+    chunk-system:
+      gen-parallelism: default
+      io-threads: -1
+      worker-threads: -1
+    collisions:
+      enable-player-collisions: true
+      send-full-pos-for-hard-colliding-entities: true
+    commands:
+      fix-target-selector-tag-completion: true
+      suggest-player-names-when-null-tab-completions: true
+      time-command-affects-all-worlds: false
+    console:
+      enable-brigadier-completions: true
+      enable-brigadier-highlighting: true
+      has-all-permissions: false
+    item-validation:
+      book:
+        author: 8192
+        page: 16384
+        title: 8192
+      book-size:
+        page-max: 2560
+        total-multiplier: 0.98
+      display-name: 8192
+      lore-line: 8192
+      resolve-selectors-in-books: false
+    logging:
+      deobfuscate-stacktraces: true
+      log-player-ip-addresses: true
+      use-rgb-for-named-text-colors: true
+    messages:
+      kick:
+        authentication-servers-down: <lang:multiplayer.disconnect.authservers_down>
+        connection-throttle: Connection throttled! Please wait before reconnecting.
+        flying-player: <lang:multiplayer.disconnect.flying>
+        flying-vehicle: <lang:multiplayer.disconnect.flying>
+      no-permission: <red>I'm sorry, but you do not have permission to perform this command.
+        Please contact the server administrators if you believe that this is in error.
+      use-display-name-in-quit-message: false
+    misc:
+      chat-threads:
+        chat-executor-core-size: -1
+        chat-executor-max-size: -1
+      fix-entity-position-desync: true
+      lag-compensate-block-breaking: true
+      load-permissions-yml-before-plugins: true
+      max-joins-per-tick: 3
+      region-file-cache-size: 256
+      strict-advancement-dimension-check: false
+      use-alternative-luck-formula: false
+      use-dimension-type-for-custom-spawners: false
+    packet-limiter:
+      all-packets:
+        action: KICK
+        interval: 7.0
+        max-packet-rate: 500.0
+      kick-message: <red><lang:disconnect.exceeded_packet_rate>
+      overrides:
+        ServerboundPlaceRecipePacket:
+          action: DROP
+          interval: 4.0
+          max-packet-rate: 5.0
+    player-auto-save:
+      max-per-tick: -1
+      rate: -1
+    proxies:
+      bungee-cord:
+        online-mode: true
+      proxy-protocol: false
+      velocity:
+        enabled: true
+        online-mode: false
+        secret: 5L7eb15i6yie
+    scoreboards:
+      save-empty-scoreboard-teams: false
+      track-plugin-scoreboards: false
+    spam-limiter:
+      incoming-packet-threshold: 300
+      recipe-spam-increment: 1
+      recipe-spam-limit: 20
+      tab-spam-increment: 1
+      tab-spam-limit: 500
+    timings:
+      enabled: true
+      hidden-config-entries:
+      - database
+      - proxies.velocity.secret
+      history-interval: 300
+      history-length: 3600
+      server-name: Unknown Server
+      server-name-privacy: false
+      url: https://timings.aikar.co/
+      verbose: true
+    unsupported-settings:
+      allow-grindstone-overstacking: false
+      allow-headless-pistons: false
+      allow-permanent-block-break-exploits: false
+      allow-piston-duplication: false
+      perform-username-validation: true
+    watchdog:
+      early-warning-delay: 10000
+      early-warning-every: 5000
+  server.properties: |
+    #Minecraft server properties
+    spawn-protection=0
+    max-tick-time=60000
+    query.port=25566
+    server-name=Paper Test Server
+    generator-settings=
+    sync-chunk-writes=true
+    force-gamemode=false
+    allow-nether=true
+    enforce-whitelist=false
+    gamemode=survival
+    broadcast-console-to-ops=true
+    enable-query=false
+    player-idle-timeout=0
+    difficulty=easy
+    spawn-monsters=true
+    broadcast-rcon-to-ops=true
+    op-permission-level=4
+    pvp=true
+    entity-broadcast-range-percentage=100
+    snooper-enabled=false
+    level-type=default
+    rcon.ip=127.0.0.1
+    hardcore=false
+    enable-status=true
+    enable-command-block=true
+    max-players=50
+    network-compression-threshold=256
+    resource-pack-sha1=
+    max-world-size=29999984
+    function-permission-level=2
+    rcon.port=25575
+    server-port=25565
+    debug=false
+    server-ip=127.0.0.1
+    spawn-npcs=true
+    allow-flight=false
+    level-name=world
+    view-distance=7
+    resource-pack=
+    spawn-animals=true
+    white-list=false
+    rcon.password=
+    generate-structures=true
+    online-mode=true
+    max-build-height=256
+    level-seed=
+    prevent-proxy-connections=false
+    use-native-transport=true
+    enable-jmx-monitoring=false
+    rate-limit=0
+    enable-rcon=false
+    motd=Paper Test Server
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server1
+  namespace: minecraft
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+      version: "0.1"  
+  template:
+    metadata:
+      labels:
+        app: server
+        version: "0.1"
+    spec:
+      containers:
+      - name: papermc
+        image: itzg/minecraft-server:latest
+        env:
+        - name: "EULA"
+          value: "TRUE"
+        - name: "TYPE"
+          value: "PAPER"
+        - name: "ONLINE_MODE"
+          value: "FALSE"
+        volumeMounts:
+        - name: config
+          mountPath: "/config"
+          readOnly: true
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "2"
+        ports:
+        - containerPort: 25565
+      volumes:
+      - name: data
+        configMap:
+          name: server-config
+          items:
+          - key: "server.protperties"
+            path: "server.properties"
+        
+      - name: config
+        configMap:
+          name: server-config
+          items:
+          - key: "paper-global.yml"
+            path: "paper-global.yml"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: server1
+  namespace: minecraft
+spec:
+  selector:
+    app: server
+    version: "0.1"
+  ports:
+  - port: 25565
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Sidecar
+metadata:
+  name: server
+  namespace: minecraft
+spec:
+  workloadSelector:
+    labels:
+      app: server
+  ingress:
+  - port: 
+      number: 25565
+      protocol: TCP
+      name: proxy
+    bind: "0.0.0.0"
+    defaultEndpoint: "127.0.0.1:25565"
+...
