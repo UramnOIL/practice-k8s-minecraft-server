@@ -24,9 +24,6 @@ provider "kubernetes" {
 resource "kubernetes_namespace" "istio-system" {
   metadata {
     name = "istio-system"
-    aannotations = [
-      "sidecar.jaegertracing.io/inject"
-    ]
   }
 }
 
