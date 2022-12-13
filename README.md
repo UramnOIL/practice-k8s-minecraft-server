@@ -37,9 +37,9 @@ minikube ip
 
 表示されたIPアドレスとポートを使って、マインクラフトのクライアントにマルチプレイヤーサーバーを追加し接続する。
 
-![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/images/minecraft.png)
+![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/main/images/minecraft.png)
 
-![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/images/minecraft_console.png)
+![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/main/images/minecraft_console.png)
 
 ## Kialiに接続
 
@@ -49,7 +49,7 @@ Kialiはサービスメッシュの可視化ツールです。
 istioctl dashboard kiali
 ```
 
-![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/images/kiali.png)
+![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/main/images/kiali.png)
 
 ## kubernetes/minecraft/server.yaml
 
