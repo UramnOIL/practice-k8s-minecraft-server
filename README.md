@@ -30,12 +30,19 @@ kubectl apply -f kubernetes/minecraft/server.yaml
 
 ```sh
 kubectl get service -n istio-ingress istio-ingressgateway
-# 公開されているPortを確認
+# 25565に転送されるNodePortを確認
 minikube ip
 # minikubeに配られたIPアドレスを確認
 ```
 
 表示されたIPアドレスとポートを使って、マインクラフトのクライアントにマルチプレイヤーサーバーを追加し接続する。
+
+```
+ssh -i ~/.minikube/machines/minikube/id_rsa docker@<minikubeのIPアドレス> 25565:127.0.0.1:<NodePort>
+# 127.0.0.1:25565で接続できるようにするために、Kubernetesのマシン内にポートフォワード
+```
+
+ローカルPCでホストを入力し、接続を開始する。
 
 ![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/main/images/minecraft.png)
 
