@@ -59,6 +59,31 @@ resource "helm_release" "istiod" {
     name = "global.tracer.zipkin.address"
     value = "jaeger-collector.istio-system.svc.cluster.local:14250"
   }
+  
+   set {
+    name  = "prometheus.enabled"
+    value = "true"
+  }
+  
+  set {
+    name  = "prometheus.namespace"
+    value = "custom-namespace"
+  }
+
+  set {
+    name  = "kiali.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "tracing.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "tracing.provider"
+    value = "jaeger"
+  }
 }
 
 resource "kubernetes_namespace" "istio-ingress" {
@@ -72,7 +97,7 @@ resource "kubernetes_namespace" "istio-ingress" {
 }
 
 resource "helm_release" "istio-ingress" {
-  name = "istio-ingressgateway"
+  name = "istio-ingress"
   repository = "https://istio-release.storage.googleapis.com/charts"
   chart = "gateway"
   namespace = "istio-ingress"
@@ -121,17 +146,12 @@ resource "helm_release" "prometheus" {
   depends_on = [helm_release.istiod]
 }
 
-resource "kubernetes_namespace" "kiali-operator" {
-  metadata {
-    name = "kiali-operator"
-  }
-}
-
 resource "helm_release" "kiali-operator" {
   name = "kiali"
   repository = "https://kiali.org/helm-charts"
   chart = "kiali-operator"
   namespace = "kiali-operator"
+  create_namespace = true
 
   depends_on = [helm_release.prometheus]
 
@@ -143,11 +163,6 @@ resource "helm_release" "kiali-operator" {
   set {
     name = "cr.namespace"
     value = "istio-system"
-  }
-
-  set {
-    name = "cr.spec.external_services.prometheus.url"
-    value = "http://prometheus-server.monitoring.svc.cluster.local"
   }
 }
 
@@ -181,9 +196,7 @@ resource "helm_release" "cert-manager" {
   chart = "cert-manager"
   namespace = "cert-manager"
   version = "v1.10.1"
-  create_namespace = "true"
-
-  depends_on = [helm_release.istiod]
+  create_namespace = true
 
   set {
     name = "installCRDs"
@@ -195,40 +208,25 @@ resource "helm_release" "jaeger-operator" {
   name = "jaeger-operator"
   repository = "https://jaegertracing.github.io/helm-charts"
   chart = "jaeger-operator"
-  namespace = "observability"
+  namespace = "istio-system"
 
-  depends_on = [helm_release.istiod, helm_release.cert-manager]
+  depends_on = [helm_release.cert-manager]
 
   set {
     name = "jaeger.create"
     value = "true"
   }
-
-  set {
-    name = "jaeger.namespace"
-    value = "observability"
-  }
-
-  set {
-    name = "rbac.create"
-    value = "true"
-  }
-
-  set {
-    name = "serviceAccount.create"
-    value = "true"
-  }
 }
 
-# resource "kubernetes_manifest" "jaeger" {
-#   manifest = {
-#     "apiVersion" = "jaegertracing.io/v1"
-#     "kind": "Jaeger"
-#     "metadata" = {
-#       "name" = "allinone"
-#       "namespace" = "istio-system"
-#     }
-#   }
-
-#   depends_on = [helm_release.jaeger-operator]
-# }
+#resource "kubernetes_manifest" "jaeger" {
+#  depends_on = [helm_release.jaeger-operator]
+#
+#  manifest = {
+#    "apiVersion" = "jaegertracing.io/v1"
+#    "kind": "Jaeger"
+#    "metadata" = {
+#      "name" = "allinone"
+#      "namespace" = "istio-system"
+#    }
+#  }
+#}

@@ -43,11 +43,12 @@ data:
     [servers]
     # Configure your servers here. Each key represents the server's name, and the value
     # represents the IP address of the server to connect to.
-    minecraft-1 = "localhost:25566"
+    minecraft-game = "localhost:25567"
+    minecraft-life-1 = "localhost:25566"
 
     # In what order we should try servers when a player logs in or is kicked from aserver.
     try = [
-        "minecraft-1"
+        "minecraft-life-1"
     ]
 
     [forced-hosts]
@@ -234,6 +235,6 @@ spec:
                 address:
                   socket_address:
                     protocol: TCP
-                    address: server1.minecraft.svc.cluster.local
+                    address: life.minecraft.svc.cluster.local
                     port_value: 25565
 ...

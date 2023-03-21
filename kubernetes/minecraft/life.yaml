@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: server-config
+  name: life
   namespace: minecraft
 data:
   paper-global.yml: |
     # This is the global configuration file for Paper.
-    # As you can see, there's a lot to configure. Some options may impact gameplay, so use
+    # As you can see, there's a lot to configure. Some options may impact lifeplay, so use
     # with caution, and make sure you know what each option does before configuring.
     # 
     # If you need help with the configuration or have any questions related to Paper,
@@ -142,10 +142,10 @@ data:
     server-name=Paper Test Server
     generator-settings=
     sync-chunk-writes=true
-    force-gamemode=false
+    force-lifemode=false
     allow-nether=true
     enforce-whitelist=false
-    gamemode=survival
+    lifemode=survival
     broadcast-console-to-ops=true
     enable-query=false
     player-idle-timeout=0
@@ -190,20 +190,21 @@ data:
     motd=Paper Test Server
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: server1
+  name: life
   namespace: minecraft
 spec:
-  replicas: 1
+  serviceName: life
+  replicas: 3
   selector:
     matchLabels:
-      app: server
+      app: life
       version: "0.1"  
   template:
     metadata:
       labels:
-        app: server
+        app: life
         version: "0.1"
     spec:
       containers:
@@ -220,6 +221,8 @@ spec:
         - name: config
           mountPath: "/config"
           readOnly: true
+        - name: data
+          mountPath: "/data"
         resources:
           limits:
             memory: "2Gi"
@@ -227,28 +230,31 @@ spec:
         ports:
         - containerPort: 25565
       volumes:
-      - name: data
-        configMap:
-          name: server-config
-          items:
-          - key: "server.protperties"
-            path: "server.properties"
-        
       - name: config
         configMap:
-          name: server-config
+          name: life
           items:
+          - key: "server.properties"
+            path: "server.properties"
           - key: "paper-global.yml"
             path: "paper-global.yml"
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 16Gi
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: server1
+  name: life
   namespace: minecraft
 spec:
   selector:
-    app: server
+    app: life
     version: "0.1"
   ports:
   - port: 25565
@@ -256,12 +262,12 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: Sidecar
 metadata:
-  name: server
+  name: life
   namespace: minecraft
 spec:
   workloadSelector:
     labels:
-      app: server
+      app: life
   ingress:
   - port: 
       number: 25565
