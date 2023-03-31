@@ -20,10 +20,7 @@ cd <project-root>
 terraform plan
 terraform apply
 
-kubectl apply -f kubernetes/namespace.yaml
-kubectl apply -f kubernetes/gateway.yaml
-kubectl apply -f kubernetes/minecraft/proxy.yaml
-kubectl apply -f kubernetes/minecraft/server.yaml
+kubectl -k kubernetes
 ```
 
 ## マインクラフトサーバーに接続
