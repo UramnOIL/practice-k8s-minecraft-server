@@ -258,21 +258,4 @@ spec:
     version: "0.1"
   ports:
   - port: 25565
----
-apiVersion: networking.istio.io/v1beta1
-kind: Sidecar
-metadata:
-  name: life
-  namespace: minecraft
-spec:
-  workloadSelector:
-    labels:
-      app: life
-  ingress:
-  - port: 
-      number: 25565
-      protocol: TCP
-      name: proxy
-    bind: "0.0.0.0"
-    defaultEndpoint: "127.0.0.1:25565"
 ...

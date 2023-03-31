@@ -254,19 +254,21 @@ spec:
   - port: 25565
 ---
 apiVersion: networking.istio.io/v1beta1
-kind: Sidecar
+kind: VirtualService
 metadata:
   name: game
   namespace: minecraft
 spec:
-  workloadSelector:
-    labels:
-      app: game
-  ingress:
-  - port: 
-      number: 25565
-      protocol: TCP
-      name: proxy
-    bind: "0.0.0.0"
-    defaultEndpoint: "127.0.0.1:25565"
+  hosts:
+  - "proxy"
+  gateways:
+  - minecraft
+  tcp:
+  - match:
+    - port: 25565
+    route:
+    - destination:
+        host: proxy
+        port:
+          number: 25565
 ...
