@@ -96,8 +96,8 @@ resource "kubernetes_namespace" "istio-ingress" {
   }
 }
 
-resource "helm_release" "istio-ingress" {
-  name = "istio-ingress"
+resource "helm_release" "istio-ingressgateway" {
+  name = "istio-ingressgateway"
   repository = "https://istio-release.storage.googleapis.com/charts"
   chart = "gateway"
   namespace = "istio-ingress"
