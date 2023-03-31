@@ -58,6 +58,13 @@ istioctl dashboard kiali
 
 ![](https://raw.githubusercontent.com/UramnOIL/practice-k8s-minecraft-server/main/images/kiali.png)
 
+## Prometheus
+
+https://prometheus.io/
+
+監視ツールです。
+マインクラフトサーバー内のメトリクスを収集するexport
+
 ## kubernetes/minecraft/server.yaml
 
 マインクラフトサーバー用のmanifestです。
@@ -69,18 +76,3 @@ Paperを使用しています。
 
 プロキシサーバー用のmanifestです。
 Velocityを使用しています。
-
-## 注意点
-
-### Sidecarが役割を果たしていない
-
-Envoyの理解不足のため、Velocityは直接Paperのアドレスを知っている状態です。
-
-理想ではアプリケーションコンテナはEnvoyのアドレスのみを知っており、通信先の制御はEnvoyが担っている状態です。つまり、Envoyを発端としたメッシュが構築されるべきで、アプリケーションコンテナは直接やり取りしません。
-
-### Jaegerがインストールできていない
-
-この設定ではIstioの要素のうちの一つであるJaegerをインストールできません。
-
-正しく原因を特定できているわけではないですが、おそらくjaeger-operaterがカスタムリソースであるJaegerの配置のイベントを捉えておらず、jaeger-operatorがJaegerインスタンスのデプロイを開始できないと推察されます。
-実際に`setup.yaml`にはJaegerリソースを展開するためのマニフェストが記述されていますが、`kubectl apply -f setup.yaml`を実行してもmanifestファイルがKubernetesに記憶されただけでJaegerインスタンスはどこにもありません。
