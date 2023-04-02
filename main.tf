@@ -103,31 +103,9 @@ resource "helm_release" "istio-ingressgateway" {
   namespace = "istio-ingress"
 
   depends_on = [helm_release.istiod]
-  
-  set {
-    name = "service.type"
-    value = "NodePort"
-  }
-
-  set {
-    name = "service.ports[0].name"
-    value = "minecraft"
-  }
-
-  set {
-    name = "service.ports[0].port"
-    value = 25565
-  }
-
-  set {
-    name = "service.ports[0].protocol"
-    value = "TCP"
-  }
-
-  set {
-    name = "service.ports[0].targetPort"
-    value = 25565
-  }
+  values = [
+    file("${path.module}/gateway-values.yaml")
+  ]
 }
 
 resource "kubernetes_namespace" "monitoring" {

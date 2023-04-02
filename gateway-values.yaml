@@ -1,0 +1,7 @@
+service:
+  type: NodePort
+  ports:
+    - name: minecraft
+      port: 25565
+      protocol: TCP
+      targetPort: 25565
