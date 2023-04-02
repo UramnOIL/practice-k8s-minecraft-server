@@ -1,14 +1,3 @@
-locals {
-  ports = [
-    {
-      name = "minecraft"
-      nodePort =  30565
-      protocol = "TCP"
-      targetPort = 25565
-    }
-  ]
-}
-
 provider "helm" {
   kubernetes {
     config_path = "~/.kube/config"
@@ -26,19 +15,6 @@ resource "kubernetes_namespace" "istio-system" {
     name = "istio-system"
   }
 }
-
-# resource "kubernetes_namespace" "istio-operator" {
-#   metadata {
-#     name = "istio-operator"
-#   }
-# }
-
-# resource "helm_release" "istio-operator" {
-#   name = "istio-operator"
-#   repository = "https://wiremind.github.io/wiremind-helm-charts"
-#   chart = "istio-operator"
-#   namespace = "istio-system"
-# }
 
 resource "helm_release" "istio-base" {
   name = "istio-base"
@@ -107,30 +83,6 @@ resource "helm_release" "kiali-operator" {
   ]
 }
 
-# resource "kubernetes_manifest" "kiali" {
-#   depends_on = [helm_release.kiali-operator]
-#   manifest = {
-#     "apiVersion" = "kiali.io/v1alpha1"
-#     "kind" = "Kiali"
-#     "metadata" = {
-#       "name" = "kiali"
-#       "namespace"= "istio-system"
-#     }
-#     "spec" = {
-#       "auth" = {
-#         "strategy" = "token"
-#       }
-#       "deployment" = {
-#         "accessible_namespaces" = ["istio-ingress", "minecraft"]
-#         "view_only_mode" = "false"
-#       }
-#       "server" = {
-#         "web_root" = "/kiali"
-#       }
-#     }
-#   }
-# }
-
 resource "helm_release" "cert-manager" {
   name = "cert-manager"
   repository = "https://charts.jetstack.io"
@@ -158,19 +110,6 @@ resource "helm_release" "jaeger-operator" {
     value = "true"
   }
 }
-
-#resource "kubernetes_manifest" "jaeger" {
-#  depends_on = [helm_release.jaeger-operator]
-#
-#  manifest = {
-#    "apiVersion" = "jaegertracing.io/v1"
-#    "kind": "Jaeger"
-#    "metadata" = {
-#      "name" = "allinone"
-#      "namespace" = "istio-system"
-#    }
-#  }
-#}
 
 resource "helm_release" "argocd" {
   name       = "argocd"
