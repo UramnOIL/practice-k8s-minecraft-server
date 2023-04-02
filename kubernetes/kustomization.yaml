@@ -6,3 +6,4 @@ resources:
 - jaeger.yaml
 - namespace.yaml
 - minecraft
+- kiali.yaml

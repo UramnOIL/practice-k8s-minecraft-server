@@ -132,16 +132,9 @@ resource "helm_release" "kiali-operator" {
   create_namespace = true
 
   depends_on = [helm_release.prometheus]
-
-  set {
-    name = "cr.create"
-    value = "true"
-  }
-
-  set {
-    name = "cr.namespace"
-    value = "istio-system"
-  }
+  values = [
+    file("${path.module}/kiali-operator-values.yaml")
+  ]
 }
 
 # resource "kubernetes_manifest" "kiali" {
