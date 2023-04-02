@@ -180,3 +180,10 @@ resource "helm_release" "argocd" {
   create_namespace = true
 }
 
+resource "helm_release" "calico" {
+  name       = "calico"
+  repository = "https://docs.projectcalico.org/charts"
+  chart      = "tigera-operator"
+  namespace  = "calico-system"
+  create_namespace = true
+}
