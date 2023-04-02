@@ -54,36 +54,6 @@ resource "helm_release" "istiod" {
   namespace = "istio-system"
 
   depends_on = [helm_release.istio-base]
-
-  set {
-    name = "global.tracer.zipkin.address"
-    value = "jaeger-collector.istio-system.svc.cluster.local:14250"
-  }
-  
-   set {
-    name  = "prometheus.enabled"
-    value = "true"
-  }
-  
-  set {
-    name  = "prometheus.namespace"
-    value = "custom-namespace"
-  }
-
-  set {
-    name  = "kiali.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "tracing.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "tracing.provider"
-    value = "jaeger"
-  }
 }
 
 resource "kubernetes_namespace" "istio-ingress" {
