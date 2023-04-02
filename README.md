@@ -14,13 +14,14 @@ KubernetesにJava版のマインクラフトサーバーをデプロイします
 ## インストール
 
 ```sh
-minikube start --addons=ingress
+minikube start
 
-cd <project-root>
 terraform plan
 terraform apply
-
 kubectl -k kubernetes
+
+# oneliner
+terraform plan && echo yes | terraform apply && kubectl -k kubernetes
 ```
 
 ## マインクラフトサーバーに接続
@@ -28,14 +29,9 @@ kubectl -k kubernetes
 ```sh
 kubectl get service -n istio-ingress istio-ingressgateway
 # 25565に転送されるNodePortを確認
-minikube ip
-# minikubeに配られたIPアドレスを確認
-```
 
-表示されたIPアドレスとポートを使って、マインクラフトのクライアントにマルチプレイヤーサーバーを追加し接続する。
-
-```
-ssh -i ~/.minikube/machines/minikube/id_rsa docker@<minikubeのIPアドレス> 25565:127.0.0.1:<NodePort>
+ssh -i ~/.minikube/machines/minikube/id_rsa docker@$(minikube ip) 25565:127.0.0.1:<NodePort>
+# 表示されたIPアドレスとポートを使って、マインクラフトのクライアントにマルチプレイヤーサーバーを追加し接続する。
 # 127.0.0.1:25565で接続できるようにするために、Kubernetesのマシン内にポートフォワード
 ```
 
